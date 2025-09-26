@@ -19,17 +19,15 @@ public class Reservation {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Long memberId;
 
     private LocalDateTime startAt;
 
     private LocalDateTime endAt;
 
-    public Reservation(Room room, Member member, LocalDateTime startAt, LocalDateTime endAt) {
+    public Reservation(Room room, Long memberId, LocalDateTime startAt, LocalDateTime endAt) {
         this.room = room;
-        this.member = member;
+        this.memberId = memberId;
         this.startAt = startAt;
         this.endAt = endAt;
     }
