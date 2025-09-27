@@ -4,6 +4,7 @@ import com.synclife.reservation.dto.ReservationRequestDTO;
 import com.synclife.reservation.dto.ReservationResponseDTO;
 import com.synclife.reservation.entity.Reservation;
 import com.synclife.reservation.entity.Room;
+import com.synclife.reservation.enums.Role;
 import com.synclife.reservation.repository.ReservationRepository;
 import com.synclife.reservation.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,4 +48,18 @@ public class ReservationService {
                 saveReservation.getEndAt()
         );
     }
+
+    @Transactional
+    public void deleteReservation(Long reservationId, Long memberId, Role role) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
+        // 권한 검증: ADMIN 또는 자기가 예약한것만 취소 가능
+        if (role != Role.ADMIN && !reservation.getMemberId().equals(memberId)) {
+            throw new SecurityException("본인 예약만 취소할 수 있습니다.");
+        }
+
+        reservationRepository.delete(reservation);
+    }
+
 }

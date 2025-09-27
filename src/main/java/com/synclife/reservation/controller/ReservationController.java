@@ -27,6 +27,16 @@ public class ReservationController {
 
         ReservationResponseDTO reservationResponseDTO = reservationService.postReservation(memberId, reservationRequestDTO);
         return ResponseEntity.ok(reservationResponseDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteReservation(
+            @PathVariable Long id,
+            @RequestAttribute("memberId") Long memberId,
+            @RequestAttribute("role") Role role) {
+
+        reservationService.deleteReservation(id, memberId, role);
+        return ResponseEntity.ok("예약이 취소되었습니다.");
 
     }
 
