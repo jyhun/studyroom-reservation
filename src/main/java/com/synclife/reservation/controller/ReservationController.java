@@ -16,7 +16,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<?> postReservation(
+    public ResponseEntity<ReservationResponseDTO> postReservation(
             @RequestBody ReservationRequestDTO reservationRequestDTO,
             @RequestAttribute("memberId") Long memberId,
             @RequestAttribute("role") Role role) {
@@ -30,7 +30,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteReservation(
+    public ResponseEntity<String> deleteReservation(
             @PathVariable Long id,
             @RequestAttribute("memberId") Long memberId,
             @RequestAttribute("role") Role role) {

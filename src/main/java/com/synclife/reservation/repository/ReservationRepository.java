@@ -22,4 +22,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findReservationsLock(@Param("roomId") Long roomId,
                                            @Param("startAt") LocalDateTime startAt,
                                            @Param("endAt") LocalDateTime endAt);
+
+    // 예약을 날짜별로 조회함
+    @Query("SELECT r FROM Reservation r " +
+            "WHERE r.room.id = :roomId " +
+            "AND r.startAt >= :startOfDay " +
+            "AND r.endAt <= :endOfDay " +
+            "ORDER BY r.startAt ASC")
+    List<Reservation> findReservationsAvailability(
+            @Param("roomId") Long roomId,
+            @Param("startOfDay") LocalDateTime startOfDay,
+            @Param("endOfDay") LocalDateTime endOfDay);
 }
