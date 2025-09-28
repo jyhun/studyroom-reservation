@@ -8,6 +8,7 @@ import com.synclife.reservation.enums.Role;
 import com.synclife.reservation.repository.ReservationRepository;
 import com.synclife.reservation.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -40,6 +42,8 @@ public class ReservationService {
         Reservation reservation = new Reservation(room, memberId, reservationRequestDTO.getStartAt(), reservationRequestDTO.getEndAt());
         Reservation saveReservation = reservationRepository.save(reservation);
 
+        log.info("예약 성공: reservationId={}, memberId={}, roomId={}", saveReservation.getId(), memberId, room.getId());
+
         return new ReservationResponseDTO(
                 saveReservation.getId(),
                 saveReservation.getRoom().getId(),
@@ -60,6 +64,8 @@ public class ReservationService {
         }
 
         reservationRepository.delete(reservation);
+
+        log.info("예약 취소 성공: reservationId={}, memberId={}, role={}", reservationId, memberId, role);
     }
 
 }

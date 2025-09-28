@@ -16,6 +16,14 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+
+        if (path.startsWith("/rooms") && "GET".equalsIgnoreCase(method)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = request.getHeader("Authorization");
 
         if (token == null) { // 토큰 없는 경우 401 오류
@@ -31,11 +39,11 @@ public class AuthFilter extends OncePerRequestFilter {
                 request.setAttribute("role", Role.USER);
                 request.setAttribute("memberId", memberId);
             } catch (NumberFormatException e) { // 토큰 형식 잘못된 경우 401 오류
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"잘못된 토큰 형식입니다.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 토큰 형식입니다.");
                 return;
             }
         } else { // 알 수 없는 토큰인 경우 401 오류
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"유효하지 않은 토큰입니다.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰입니다.");
             return;
         }
 

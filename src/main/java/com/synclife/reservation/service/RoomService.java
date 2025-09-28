@@ -9,6 +9,7 @@ import com.synclife.reservation.dto.RoomRequestDTO;
 import com.synclife.reservation.dto.RoomResponseDTO;
 import com.synclife.reservation.entity.Room;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoomService {
 
     private final RoomRepository roomRepository;
@@ -28,6 +30,8 @@ public class RoomService {
     public Long postRoom(RoomRequestDTO roomRequestDTO) {
         Room room = new Room(roomRequestDTO.getName(), roomRequestDTO.getLocation(), roomRequestDTO.getCapacity());
         Room saveRoom = roomRepository.save(room);
+
+        log.info("회의실 등록 성공: roomId={}", saveRoom.getId());
 
         return saveRoom.getId();
     }
@@ -78,6 +82,8 @@ public class RoomService {
                     availableTimeDTOList
             ));
         }
+
+        log.info("회의실 가용성 조회 성공: date={}, rooms={}", localDate, roomResponseDTOList.size());
 
         return roomResponseDTOList;
     }

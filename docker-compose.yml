@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: reservation
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: reservation
+      MYSQL_PASSWORD: reservation
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/reservation
+      SPRING_DATASOURCE_USERNAME: reservation
+      SPRING_DATASOURCE_PASSWORD: reservation
+    ports:
+      - "8080:8080"
